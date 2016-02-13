@@ -68,8 +68,7 @@ def insertItem(conn, data):
 		print("insertItem2Table Error")
 		
 def updateItem(conn, data):
-	sql = '''UPDATE stockList SET sellTime = ?, sellPrice = ?,sellColumn = ?,inhandFlag = ? 
-											WHERE name = ? and inhandFlag = ? and simuReal = ?'''
+	sql = '''UPDATE stockList SET sellTime = ?, sellPrice = ?,sellColumn = ?,inhandFlag = ? WHERE id = ?'''
 	if sql is not None and sql != '':
 		if data is not None:
 			cu = getCursor(conn)
@@ -127,7 +126,7 @@ if __name__ == '__main__':
 	for i in record:
 		print(i)
 	
-	i = ('20150203', 6.14, 2000, 'F', '小商品城', 'T', 'S')
+	i = ('20150203', 6.14, 2000, 'F', 1)
 	updateItem(conn, i)
 	
 	sql = '''SELECT * FROM stockList'''

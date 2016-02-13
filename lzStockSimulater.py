@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*- 
-
 from lzStockSimulaterEnv import simulaterStock
 from lzStockHq import getStockHq
 from lzStockType import cd, db
@@ -7,15 +6,31 @@ import lzStockOperateDB
 import datetime
 
 # sm stands for simulater
+''' 
+	从数据库中取出所有当前持有的股票
+'''
 def smGetStockFromDb():
-	pass
+	handStock = {}
+	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
+	inhand = lzStockOperateDB.fetchAllItems(conn)
+	for item in inhand:
+		if (item[db.inhandFlag] == 'T'):
+			handStock[item[db.code]] = [item[db.buyPrice], item[db.buyColumn], item[db.buyDate], item[db.id]]
+	lzStockOperateDB.closeStockDB(conn, cu)
+	return handStock
 	
-def smSaveStockToDb():
+def smUpdateStockToDb(price, stockDBid):
+	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
+	sellTime = (str(datetime.datetime.now())[:10]).replace('-','')
+	data = (sellTime, price, 1000, 'F', stockDBid)
+	lzStockOperateDB.updateItem(conn, data)
+	lzStockOperateDB.closeStockDB(conn, cu)
 	pass
 
-def smInterestStock():
-	pass
-	
+''' 一键下单购买关注的实验性股票
+	1、读取数据库，如果数据库中已有该股票的持有记录，则放弃
+	2、若该股票没有持有记录，则买入，同时写入数据库
+'''
 def smBuyStock():
 	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
 	inhand = lzStockOperateDB.fetchAllItems(conn)
@@ -28,12 +43,28 @@ def smBuyStock():
 				flag = 1
 		if( flag == 1):
 			pass
-		else :
-			index = index + 1
+		else:
 			new = getStockHq(stock)
-			newitem = (index, stock, new[cd.name], buyTime, (float)(new[cd.price]), 1000, '', 0, 0, 'T', 'S')
-			lzStockOperateDB.insertItem(conn, newitem)
+			if((float)(new[cd.price]) > 0):
+				index = index + 1
+				newitem = (index, stock, new[cd.name], buyTime, (float)(new[cd.price]), 1000, '', 0, 0, 'T', 'S')
+				lzStockOperateDB.insertItem(conn, newitem)
+			else:
+				pass
 	lzStockOperateDB.closeStockDB(conn, cu)
 			
 if __name__ == '__main__':
 	smBuyStock()
+	handStock = smGetStockFromDb()
+	print(len(handStock))
+
+	for stock in handStock:
+		smUpdateStockToDb(55.0, handStock[stock][3])
+	handStock = smGetStockFromDb()
+	print(len(handStock))
+	
+	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
+	inhand = lzStockOperateDB.fetchAllItems(conn)
+	for item in inhand:
+		print(item)
+	lzStockOperateDB.closeStockDB(conn, cu)

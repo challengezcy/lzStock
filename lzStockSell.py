@@ -16,30 +16,23 @@ zstdPoint = 5
 #
 #  股票代码    持股期间的最高价(参考上面定义)
 zstdData = {}
-zstdInit = 0
 
-def zstdInitialize(inHandStock):
-	global zstdInit
-	if(zstdInit == 0):
-		print("zstdInitialize...")
-		for stockCode in inHandStock:
-			tmpStockCode = stockCode.replace('h','s')
-			debugPrint(tmpStockCode, stockCode)
-			zstdPrice = inHandStock[stockCode][0]
-			stockHq = getStockDayData(tmpStockCode, inHandStock[stockCode][2], 'd')
-			print(' 		', 'buyPrice:', zstdPrice)
-			for dayData in stockHq :
-				print(' 		', dayData[0], dayData[4])
-				if ( zstdPrice < dayData[4]):
-					zstdPrice = dayData[4]
-			zstdData[stockCode] = zstdPrice
-			print(' 	', stockCode, zstdData[stockCode])
-		zstdInit = 1
-	else:
-		pass
+def zstdInitialize(handStock):
+	print("zstdInitialize...")
+	for stockCode in handStock:
+		tmpStockCode = stockCode.replace('h','s')
+		debugPrint(tmpStockCode, stockCode)
+		zstdPrice = handStock[stockCode][0]
+		stockHq = getStockDayData(tmpStockCode, handStock[stockCode][2], 'd')
+		print(' 		', 'buyPrice:', zstdPrice)
+		for dayData in stockHq :
+			print(' 		', dayData[0], dayData[4])
+			if ( zstdPrice < (float)(dayData[4])):
+				zstdPrice = (float)(dayData[4])
+		zstdData[stockCode] = zstdPrice
+		print(' 	', stockCode, zstdData[stockCode])
 
-def zstdFunction(stockCode, monStockHq, inHandStock):
-	zstdInitialize(inHandStock)
+def zstdFunction(stockCode, monStockHq):
 	debugPrint("zstdFunction processing...")
 	zstdPrice = (float)(zstdData[stockCode])
 	currentPrice = (float)(monStockHq[hq.price])
