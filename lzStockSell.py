@@ -25,12 +25,14 @@ def zstdInitialize(handStock):
 		zstdPrice = handStock[stockCode][0]
 		stockHq = getStockDayData(tmpStockCode, handStock[stockCode][2], 'd')
 		print(' 		', 'buyPrice:', zstdPrice)
-		for dayData in stockHq :
-			print(' 		', dayData[0], dayData[4])
-			if ( zstdPrice < (float)(dayData[4])):
-				zstdPrice = (float)(dayData[4])
+		if(len(stockHq) != 0):
+			for dayData in stockHq :
+				print(' 		', dayData[0], dayData[4])
+				if ( zstdPrice < (float)(dayData[4])):
+					zstdPrice = (float)(dayData[4])
 		zstdData[stockCode] = zstdPrice
-		print(' 	', stockCode, zstdData[stockCode])
+	for stockCode in zstdData:
+		print(stockCode, zstdData[stockCode])
 
 def zstdFunction(stockCode, monStockHq):
 	debugPrint("zstdFunction processing...")

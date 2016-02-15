@@ -31,7 +31,14 @@ def getStockDayData(stockCode, date, flag):
 	count = 0
 	url = stockHistoryUrl%(stockCode[2:], stockCode[:2].upper(), (str)((int)(date[4:6])-1), date[6:], date[:4], flag)
 	debugPrint(url)
-	stockDayHq = urllib.request.urlopen(url).read().decode('gbk','ignore').split('\n')
+	try:
+		reqAccess = urllib.request.urlopen(url)
+	except urllib.error.HTTPError as e:
+		print('Warning !!! can not access %s'%url)
+		print('Error code:', e.code)
+		return stockHq
+
+	stockDayHq = reqAccess.read().decode('gbk','ignore').split('\n')
 	for data in stockDayHq:
 		try:
 			debugPrint(data)

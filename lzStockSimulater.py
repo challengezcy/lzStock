@@ -1,9 +1,21 @@
 # -*- coding: utf-8 -*- 
 from lzStockSimulaterEnv import simulaterStock
+from lzStockHumanNotice import humanDailyReport
 from lzStockHq import getStockHq
 from lzStockType import cd, db
 import lzStockOperateDB
 import datetime
+
+# sm stands for simulater
+''' 
+	从数据库中取出所有股票做日常统计
+'''
+def smStatisticData(arry):
+	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
+	inhand = lzStockOperateDB.fetchAllItems(conn)
+	lzStockOperateDB.closeStockDB(conn, cu)
+	humanDailyReport(inhand, flag)
+	return
 
 # sm stands for simulater
 ''' 
@@ -12,9 +24,10 @@ import datetime
 def smGetStockFromDb():
 	handStock = {}
 	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
+	curTime = (str(datetime.datetime.now())[:10]).replace('-','')
 	inhand = lzStockOperateDB.fetchAllItems(conn)
 	for item in inhand:
-		if (item[db.inhandFlag] == 'T'):
+		if (item[db.inhandFlag] == 'T' and curTime != item[db.buyDate]):
 			handStock[item[db.code]] = [item[db.buyPrice], item[db.buyColumn], item[db.buyDate], item[db.id]]
 	lzStockOperateDB.closeStockDB(conn, cu)
 	return handStock
@@ -48,6 +61,7 @@ def smBuyStock():
 			if((float)(new[cd.price]) > 0):
 				index = index + 1
 				newitem = (index, stock, new[cd.name], buyTime, (float)(new[cd.price]), 1000, '', 0, 0, 'T', 'S')
+				print("		 Buy %s %s at price %f"%(stock, new[cd.name], (float)(new[cd.price])))
 				lzStockOperateDB.insertItem(conn, newitem)
 			else:
 				pass

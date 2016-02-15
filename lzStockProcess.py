@@ -20,6 +20,9 @@ def initializeMonitorStructure(handStock):
 def monitorInHandStockHq(handStock):
 	for stockCode in handStock:
 		inHandStockHq = getVerboseStockHq(stockCode)
+		if( len(inHandStockHq) < 2):
+			print("monitorInHandStockHq: Can't get the verbose %s hq"%stockCode)
+			continue
 		noticeFlag = lzStockSell.zstdFunction(stockCode, inHandStockHq)
 		if (noticeFlag == 1 and monitorStates[stockCode][mn.state] == 1):
 			noticeString = stockCode + ' ' + inHandStockHq[hq.name] + ' ' + inHandStockHq[hq.price]
@@ -29,6 +32,9 @@ def monitorInHandStockHq(handStock):
 def monitorInHandStockHqDB(handStock):
 	for stockCode in handStock:
 		inHandStockHq = getVerboseStockHq(stockCode)
+		if( len(inHandStockHq) < 2):
+			print("monitorInHandStockHqDB: Can't get the verbose %s hq"%stockCode)
+			continue
 		noticeFlag = lzStockSell.zstdFunction(stockCode, inHandStockHq)
 		if (noticeFlag == 1 and monitorStates[stockCode][mn.state] == 1):
 			smUpdateStockToDb(inHandStockHq[hq.price], handStock[stockCode][3])

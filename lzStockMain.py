@@ -2,6 +2,7 @@
 from multiprocessing import Process, Array, Value
 from lzStockSimulater import smUpdateStockToDb, smGetStockFromDb, smBuyStock
 from lzStockEnv import inHandStock
+from lzStockDebug import debugPrint
 import sys, os
 import time, datetime
 
@@ -10,7 +11,7 @@ import lzStockProcess
 processNum = 5
 
 candidateHqPEnable = 0
-inHandHqPEnable = 0
+inHandHqPEnable = 1
 simulaterPEnable = 1
 
 # process 1, show the candidate stock Hq
@@ -25,19 +26,17 @@ def lzCandidateHq(n,arrflag):
 
 # process 2, monitor the real in hand stock Hq
 def lzMonInHandHq(n,arrflag):
-	while True:
-		print("Monitor inHasnd stocks ...")
-		lzStockProcess.initializeMonitorStructure(inHandStock)
+	if(inHandHqPEnable == 1):
 		while True:
-			if(inHandHqPEnable == 1):
+			print("Monitor inHasnd stocks ...")
+			lzStockProcess.initializeMonitorStructure(inHandStock)
+			while True:
 				if(arrflag[2] == 0):
 					lzStockProcess.realInterestStock(inHandStock)
 				elif(arrflag[2] == 1):
 					arrflag[2] = 0
 					break
-			else:
-				pass
-			time.sleep(1)
+				time.sleep(1)
 
 #process 3, simulater the in hand stock Hq
 def simulater(n,arrflag):
@@ -51,7 +50,7 @@ def simulater(n,arrflag):
 			lzStockProcess.initializeMonitorStructure(handStock)
 			while True:
 				if(arrflag[3] == 0):
-					print(" 	Start Monitor simulater stocks ...")
+					debugPrint(" 	Start Monitor simulater stocks ...")
 					lzStockProcess.simulaterInterestStock(handStock)
 					time.sleep(1)
 				elif(arrflag[3] == 1):
