@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 from multiprocessing import Process, Array, Value
-from lzStockSimulater import smUpdateStockToDb, smGetStockFromDb, smBuyStock
+from lzStockSimulater import smUpdateStockToDb, smGetStockFromDb, smBuyStock, smStatisticData
 from lzStockEnv import inHandStock
 from lzStockDebug import debugPrint
 import sys, os
@@ -10,19 +10,20 @@ import lzStockProcess
 
 processNum = 5
 
-candidateHqPEnable = 0
+candidateHqPEnable = 1
 inHandHqPEnable = 1
 simulaterPEnable = 1
 
 # process 1, show the candidate stock Hq
 def lzCandidateHq(n,arrflag):
 	while True:
-		if (candidateHqPEnable == 1):
+		if (candidateHqPEnable == 1 and arrflag[1] == 1):
 			print('\n''\n ------------------' + 
 					time.strftime('%Y-%m-%d : %H-%M-%S', time.localtime(time.time()))
 					+ '------------------')
 			lzStockProcess.getCandidateStockHq()
-		time.sleep(60)
+			arrflag[1] = 0
+		time.sleep(1)
 
 # process 2, monitor the real in hand stock Hq
 def lzMonInHandHq(n,arrflag):
@@ -58,6 +59,7 @@ def simulater(n,arrflag):
 					break
 				elif(arrflag[3] == 2):
 					print("		Create daily report ...")
+					smStatisticData()
 					arrflag[3] = 9
 				else:
 					time.sleep(120)
@@ -110,6 +112,8 @@ def main():
 		if(c == 'b'):
 			print("Tring to buy stock...")
 			arrFlag[5] = 1
+		if(c == 'h'):
+			arrFlag[1] = 1
 		time.sleep(1)
 		c = input()
 		

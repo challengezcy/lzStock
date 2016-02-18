@@ -10,11 +10,11 @@ import datetime
 ''' 
 	从数据库中取出所有股票做日常统计
 '''
-def smStatisticData(arry):
+def smStatisticData():
 	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
 	inhand = lzStockOperateDB.fetchAllItems(conn)
+	humanDailyReport(inhand)
 	lzStockOperateDB.closeStockDB(conn, cu)
-	humanDailyReport(inhand, flag)
 	return
 
 # sm stands for simulater
@@ -66,8 +66,8 @@ def smBuyStock():
 			else:
 				pass
 	lzStockOperateDB.closeStockDB(conn, cu)
-			
-if __name__ == '__main__':
+
+if __name__ == 'xxxxx':
 	smBuyStock()
 	handStock = smGetStockFromDb()
 	print(len(handStock))
@@ -76,9 +76,12 @@ if __name__ == '__main__':
 		smUpdateStockToDb(55.0, handStock[stock][3])
 	handStock = smGetStockFromDb()
 	print(len(handStock))
-	
+
 	conn, cu = lzStockOperateDB.initStockDB('.\\simulater.db')
 	inhand = lzStockOperateDB.fetchAllItems(conn)
 	for item in inhand:
 		print(item)
 	lzStockOperateDB.closeStockDB(conn, cu)
+
+if __name__ == '__main__':
+	smStatisticData()
