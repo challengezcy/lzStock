@@ -5,6 +5,7 @@ from lzStockHq import getVerboseStockHq, getStockHq
 from lzStockHumanNotice import humanNoticeProcess
 from lzStockType import hq, mn
 from lzStockSimulater import smUpdateStockToDb, smGetStockFromDb, smBuyStock
+from lzStockDebug import debugPrint
 
 def getCandidateStockHq():
 	for stockCode in candidateStock:
@@ -23,8 +24,8 @@ def monitorInHandStockHq(handStock):
 		if( len(inHandStockHq) < 2):
 			print("monitorInHandStockHq: Can't get the verbose %s hq"%stockCode)
 			continue
-		if( inHandStockHq[hq.price] == '0.0'):
-			print("monitorInHandStockHqDB: hq.price is not right !")
+		if( (float)(inHandStockHq[hq.price]) == 0.0):
+			debugPrint("monitorInHandStockHqDB: hq.price is not right !")
 			continue
 		noticeFlag = lzStockSell.zstdFunction(stockCode, inHandStockHq)
 		if (noticeFlag == 1 and monitorStates[stockCode][mn.state] == 1):
@@ -38,8 +39,8 @@ def monitorInHandStockHqDB(handStock):
 		if( len(inHandStockHq) < 2):
 			print("monitorInHandStockHqDB: Can't get the verbose %s hq"%stockCode)
 			continue
-		if( inHandStockHq[hq.price] == '0.0'):
-			print("monitorInHandStockHqDB: hq.price is not right !")
+		if( (float)(inHandStockHq[hq.price]) == 0.0):
+			debugPrint("monitorInHandStockHqDB: hq.price is not right !")
 			continue
 		noticeFlag = lzStockSell.zstdFunction(stockCode, inHandStockHq)
 		if (noticeFlag == 1 and monitorStates[stockCode][mn.state] == 1):
