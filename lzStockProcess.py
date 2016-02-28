@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 import lzStockSell
-from lzStockEnv import candidateStock, monitorStates
+from lzStockEnv import envGetcandidateStock, monitorStates
 from lzStockHq import getVerboseStockHq, getStockHq
 from lzStockHumanNotice import humanNoticeProcess
 from lzStockType import hq, mn
@@ -8,6 +8,7 @@ from lzStockSimulater import smUpdateStockToDb, smGetStockFromDb, smBuyStock
 from lzStockDebug import debugPrint
 
 def getCandidateStockHq():
+	candidateStock = envGetcandidateStock()
 	for stockCode in candidateStock:
 		candidateStockHq = getStockHq(stockCode)
 		print(candidateStockHq)
