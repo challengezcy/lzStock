@@ -27,7 +27,7 @@ def smGetStockFromDb():
 	curTime = (str(datetime.datetime.now())[:10]).replace('-','')
 	inhand = lzStockOperateDB.fetchAllItems(conn)
 	for item in inhand:
-		if (item[db.inhandFlag] == 'T' and curTime != item[db.buyDate]):
+		if (item[db.inhandFlag] == 'T'): # and curTime != item[db.buyDate]
 			handStock[item[db.code]] = [item[db.buyPrice], item[db.buyColumn], item[db.buyDate], item[db.id]]
 	lzStockOperateDB.closeStockDB(conn, cu)
 	return handStock

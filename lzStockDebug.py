@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*- 
-lzStockDebug = 1
+lzStockDebug = 0
 
 def debugPrint(*arg):
 	if (lzStockDebug == 1 ):
